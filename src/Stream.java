@@ -1,6 +1,10 @@
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.stream.Collectors;
 
 class Curso {
 	private String nome;
@@ -45,5 +49,49 @@ public class Stream {
 				   .mapToInt(Curso::getAlunos)
 				   .sum();
 		System.out.println(soma);
+		
+		Optional<Curso> optionalCurso = cursos.stream()
+		   .filter(c -> c.getAlunos() >= 100)
+		   .findAny();
+		
+		
+		Curso curso = optionalCurso.orElse(null);
+		System.out.println("Optional");
+		System.out.println(curso.getNome());
+		
+		optionalCurso.ifPresent(c -> System.out.println(c.getNome()));
+		
+		if (optionalCurso.isPresent()) {
+			Curso curso2 = optionalCurso.get();
+			System.out.println(curso2.getNome());
+		}
+		
+		cursos.stream()
+		   .filter(c -> c.getAlunos() >= 100)
+		   .findAny()
+		   .ifPresent(c -> System.out.println(c.getNome()));
+		
+		OptionalDouble average = cursos.stream()
+				   .filter(c -> c.getAlunos() > 100)
+				   .mapToInt(Curso::getAlunos)
+				   .average();
+		average.ifPresent(c -> System.out.println(c));
+		
+		List<Curso> listResultado = cursos.stream()
+				.filter(c -> c.getAlunos() >= 100)
+				.collect(Collectors.toList());
+		
+		listResultado.stream()
+		   .forEach(c -> System.out.println(c.getNome()));
+		
+		Map<String, Integer> map = cursos.stream()
+			.filter(c -> c.getAlunos() >= 100)
+			.collect(Collectors.toMap(
+					c -> c.getNome(), 
+					c -> c.getAlunos()));
+		System.out.println(map);
+		
+		map.forEach((nome, alunos) -> System.out.println(nome + " tem " + alunos + " alunos"));
+		
 	}
 }
